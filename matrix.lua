@@ -1,7 +1,18 @@
 
--- Datum:   10.08.2024
-
 local matrix = {}
+
+function matrix.new(M, w, h)
+
+    if w*h ~= #M then
+        error("Matrix M can't be created using width w and height h.")
+    end
+    
+    M.width = w
+    M.height = h
+    
+    return M
+
+end
 
 function matrix.plus(A, B)
     if A.width ~= B.width and A.height ~= B.height then
@@ -173,7 +184,7 @@ function matrix.mul(A, B)
 end
 
 function matrix.solve(A, b)
-    -- solve using Cramer's rule
+    -- solve A*x = b using Cramer's rule
     
     if A.height ~= b.height then
         error("Matrix A must be as tall as Vector b.")
@@ -226,24 +237,6 @@ function matrix.printMatrix(M)
         end
         io.write("\n")
     end
-end
-
-function matrix.abs(V)
-    -- DEPRICATED
-    print('matrix.abs is depricated. Use vector.abs instead.')
-
-    local n = V.height*V.width
-
-    if math.abs(V.height - V.width) ~= (n-1) then
-        error("Matrix V must be a row or column vector.")
-    end
-    
-    local sum = 0
-    for i = 1,n do
-        sum = sum + V[i]^2
-    end
-
-    return math.sqrt(sum)
 end
 
 return matrix

@@ -14,7 +14,7 @@ The idea for this project came from a course where we programmed a simple truss 
 - [LÖVE 2D](https://love2d.org/) game engine.
 
 ## How to Run
-1. Download and install the [LÖVE 2D engine](https://love2d.org/).
+1. Download and install the [LÖVE 2D engine](https://love2d.org/) version 11.3.
 2. Clone this repository:  
    `git clone https://github.com/yourusername/bridge-simulation.git`
 3. Run the game with LÖVE:  

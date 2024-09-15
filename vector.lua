@@ -1,6 +1,4 @@
 
--- Datum:   20.08.2024
-
 local vector = {}
 
 function vector.new(...)

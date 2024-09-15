@@ -1,6 +1,4 @@
 
--- Datum:   18.08.2024
-
 local roman = {}
 
 local symbols = {

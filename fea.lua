@@ -1,13 +1,14 @@
 
--- Datum:   18.08.2024
-
 local fea = {}
 
 local matrix  = require("matrix")
 local vector  = require("vector")
 
-local DISP    = 1
-local FORCE   = 2
+fea.DISP      = 1
+fea.FORCE     = 2
+
+fea.XCOORD    = 1
+fea.YCOORD    = 2
 
 local v     = {}
 local vLen  = {}
@@ -16,7 +17,7 @@ local k     = {}
 local K     = {}
 local Kg    = {}
 local B     = {}
-local C     = {}
+local C     = {}        -- stiffness matrix
 
 local AVec  = {}
 local CMod  = {}
@@ -34,14 +35,15 @@ local CCreated      = false
 local CModCreated   = false
 local isSolved      = false
 
-function fea.createStiffness(fpoints, frods)
+function fea.createStiffness(points, rods)
 
     CCreated      = true
     CModCreated   = false
     isSolved      = false
+    
 
-    points  = fpoints
-    rods    = frods
+    _G.points  = points
+    _G.rods    = rods
 
     for i = 1,(#points*2)^2 do
         C[i] = 0
@@ -114,7 +116,7 @@ function fea.modifyStiffness(fconsts)
         error('Create stiffness matrix first.')
     end
     
-    consts = fconsts
+    _G.consts = consts
     CMod = matrix.copyMatrix(C)
     
     for i = 1,C.width do
@@ -133,7 +135,7 @@ function fea.modifyStiffness(fconsts)
         local FGNR = 2*(KNR-1) + XY
         AVec[FGNR] = val
         
-        if UF == DISP then
+        if UF == fea.DISP then
             local a = (FGNR-1)*C.width+1
             local b = FGNR*C.width
             
