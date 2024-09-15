@@ -35,15 +35,15 @@ local CCreated      = false
 local CModCreated   = false
 local isSolved      = false
 
-function fea.createStiffness(points, rods)
+function fea.createStiffness(fpoints, frods)
 
     CCreated      = true
     CModCreated   = false
     isSolved      = false
     
 
-    _G.points  = points
-    _G.rods    = rods
+    points  = fpoints
+    rods    = frods
 
     for i = 1,(#points*2)^2 do
         C[i] = 0
@@ -116,7 +116,7 @@ function fea.modifyStiffness(fconsts)
         error('Create stiffness matrix first.')
     end
     
-    _G.consts = consts
+    consts = fconsts
     CMod = matrix.copyMatrix(C)
     
     for i = 1,C.width do
@@ -181,7 +181,6 @@ function fea.getAxials()
     if not isSolved then
         error('Solve FEA-System first.')
     end
-
     for i = 1,#rods do
         ug[i]   = matrix.mul(B[i], sVec)
         uVec[i] = matrix.mul(R[i], ug[i])

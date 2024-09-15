@@ -16,6 +16,6 @@ The idea for this project came from a course where we programmed a simple truss 
 ## How to Run
 1. Download and install [LÖVE 11.3](https://github.com/love2d/love/releases).
 2. Clone this repository:  
-   `git clone https://github.com/yourusername/bridge-simulation.git`
+   `git clone https://github.com/qu2001/bride-simulator`
 3. Run the game with LÖVE:  
    `love .`
