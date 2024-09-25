@@ -4,6 +4,7 @@ local fea       = require("fea")
 local vector    = require("vector")
 local truss     = require("truss")
 local roman     = require("roman")
+local canvas    = require("canvas")
 
 local points    = {}
 local rods      = {}
@@ -49,13 +50,13 @@ function love.load()
     local F     = 3000
 
     -- Punkte
-    points[1]   = {0, 0}
-    points[2]   = {1500, 0}
-    points[3]   = {1500, -1000}
-    points[4]   = {3000, 0}
-    points[5]   = {4500, -1000}
-    points[6]   = {4500, 0}
-    points[7]   = {6000, 0}
+    points[1]   = {-3000, 0}
+    points[2]   = {-1500, 0}
+    points[3]   = {-1500, -1000}
+    points[4]   = {0, 0}
+    points[5]   = {1500, -1000}
+    points[6]   = {1500, 0}
+    points[7]   = {3000, 0}
     
     -- Stabelemente
     rods[1]     = {1, 2, E*A}
@@ -91,6 +92,7 @@ function love.load()
     
     printResults(displacements, axials, reactions)
     
+    canvas.init(1000, 650, 50, 50, 8000, 6000)
     truss.init(axials)
     
 end
@@ -105,8 +107,19 @@ function love.update()
     end
     newDisps        = vector.scale(displacements, sc)
     newAxials       = vector.scale(axials, sc)
+    
 end
 
 function love.draw()
+    canvas.drawGrid(12, 16)
+    canvas.drawPoints()
     truss.drawTruss(points, rods, bearings, newAxials, newDisps, newForces)
+end
+
+function love.mousepressed(x, y, button, istouch)
+    if button == 1 then
+        x, y = canvas.toLocal(x, y)
+        x, y = canvas.gridPoint(x, y)
+        canvas.addPoint(x, y)
+    end
 end

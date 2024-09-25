@@ -1,6 +1,8 @@
 
-local roman = require("roman")
-local fea   = require("fea")
+local roman     = require("roman")
+local fea       = require("fea")
+local color     = require("color")
+local canvas    = require("canvas")
 
 local truss = {}
 
@@ -8,12 +10,6 @@ local SCALE = 30
 
 truss.PINNED = 1
 truss.ROLLER = 2
-
-truss.GRAY  = {0.5, 0.5, 0.5}
-truss.WHITE = {1, 1, 1}
-truss.BLACK = {0, 0, 0}
-truss.GREEN = {0, 0.7, 0.1}
-truss.RED   = {1, 0, 0}
 
 local festlager     = {}
 local loslager      = {}
@@ -88,55 +84,6 @@ function truss.drawText(text, x, y, fg, bg)
     love.graphics.pop()
 end
 
-function truss.toGlobal(xl, yl)
-    local x, y
-    local wApo, hApo
-    local wl = 8000
-    local hl = 6000
-    
-    wApo = winW-200
-    hApo = winH-100
-    
-    x = xl*wApo/wl + 50
-    y = -(yl*hApo/hl) + winH/2
-    
-    return x,y
-end
-
-function truss.drawGrid()
-love.graphics.push("all")
-
-    love.graphics.setColor(truss.GRAY)
-    local x1 = 0
-    local y1 = 3000
-    
-    local x2 = 8000
-    local y2 = 3000
-    for i = 0, 6 do
-        local a1, b1 = truss.toGlobal(x1, y1)
-        local a2, b2 = truss.toGlobal(x2, y2)
-        
-        love.graphics.line(a1,b2, a2,b2)
-        y1 = y1-1000
-        y2 = y2-1000
-    end
-    
-    x1 = 0
-    y1 = 3000
-    
-    x2 = 0
-    y2 = -3000
-    for i = 0,8 do
-        local a1, b1 = truss.toGlobal(x1, y1)
-        local a2, b2 = truss.toGlobal(x2, y2)
-        
-        love.graphics.line(a1,b1, a2,b2)
-        x1 = x1+1000
-        x2 = x2+1000
-    end
-
-love.graphics.pop()
-end
 
 function truss.drawNodes(nodes)
 
@@ -144,11 +91,11 @@ function truss.drawNodes(nodes)
     for i = 1,#nodes do
         local node = nodes[i]
         local xl, yl = node[1], node[2]
-        local xg, yg = truss.toGlobal(xl, yl)
+        local xg, yg = canvas.toGlobal(xl, yl)
         love.graphics.circle("fill", xg, yg, s)
         local text = roman.num2roman(i)
-        xg, yg = truss.toGlobal(xl-100, yl+100)
-        truss.drawText(text, xg, yg, truss.WHITE, truss.BLACK)
+        xg, yg = canvas.toGlobal(xl-100, yl+100)
+        truss.drawText(text, xg, yg, color.WHITE, color.BLACK)
     end
     
 end
@@ -158,17 +105,17 @@ love.graphics.push("all")
 
     for i = 1,#members do
         local member  = members[i]
-        local color   = colors[i]
+        local rgb   = colors[i]
         
         local nodeTag1, nodeTag2 = member[1], member[2]
         local node1, node2 = nodes[nodeTag1], nodes[nodeTag2]
         
-        local x1, y1 = truss.toGlobal(node1[1], node1[2])
-        local x2, y2 = truss.toGlobal(node2[1], node2[2])
+        local x1, y1 = canvas.toGlobal(node1[1], node1[2])
+        local x2, y2 = canvas.toGlobal(node2[1], node2[2])
         
-        love.graphics.setColor(color)
+        love.graphics.setColor(rgb)
         love.graphics.line(x1,y1, x2,y2)
-        truss.drawText(tostring(i), (x1+x2)/2, (y1+y2)/2, color, truss.BLACK)
+        truss.drawText(tostring(i), (x1+x2)/2, (y1+y2)/2, rgb, color.BLACK)
     end
     
 love.graphics.pop()
@@ -183,7 +130,7 @@ function truss.drawBearings(bearings, nodes)
         local rotation  = bearing[3]
         local node      = nodes[nodeTag]
         local x, y      = node[1], node[2]
-        x, y            = truss.toGlobal(x, y)
+        x, y            = canvas.toGlobal(x, y)
         
         if typ == truss.PINNED then
             love.graphics.draw(festlager.img, x,y, rotation, 0.2,0.2, festlager.w/2, 0)
@@ -192,7 +139,7 @@ function truss.drawBearings(bearings, nodes)
         end
         
         love.graphics.push('all')
-        love.graphics.setColor(truss.GREEN)
+        love.graphics.setColor(color.GREEN)
         love.graphics.circle("fill", x, y, 5)
         love.graphics.pop()
     
@@ -210,7 +157,7 @@ love.graphics.push('all')
         local nodeTag   = force[1]
         local vx, vy    = force[2], force[3]
         local node      = nodes[nodeTag]
-        local x, y      = truss.toGlobal(node[1], node[2])
+        local x, y      = canvas.toGlobal(node[1], node[2])
     
         local x0 = x
         local y0 = y
@@ -233,7 +180,7 @@ love.graphics.push('all')
         local x4 = x2-nx
         local y4 = y2-ny
         
-        love.graphics.setColor(truss.RED)
+        love.graphics.setColor(color.RED)
         love.graphics.setLineWidth(2)
         
         love.graphics.line(x1, y1, x0, y0)
@@ -287,7 +234,6 @@ love.graphics.pop()
 end
 
 function truss.drawTruss(nodes, members, bearings, axials, nodeDisps, forces)
-    truss.drawGrid()
     local colors = {}
     for i = 1,#axials do
         colors[i] = truss.heatmapColor(axials[i])
