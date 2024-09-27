@@ -5,7 +5,7 @@ This is a simple bridge simulation game developed using the LÖVE 2D game librar
 ## Features
 - Uses 1D beam elements to calculate stress and strain in structures.
 - Basic rendering for visualizing bridge structures.
-- Future plans include an editor for building bridges and varying load scenarios (e.g., vehicles).
+- Editor for creating structures.
 
 ## Inspiration
 The idea for this project came from a course where we programmed a simple truss simulation using FEM. This game aims to expand on that concept by adding interactive elements and game mechanics.

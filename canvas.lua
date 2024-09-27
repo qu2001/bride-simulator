@@ -21,6 +21,10 @@ function canvas.init(fwc, fhc, fPx, fPy, fwcVirtuel, fhcVirtuel)
 
 end
 
+function canvas.getDXY()
+    return dx,dy
+end
+
 function canvas.toGlobal(xl, yl)
 
     local xt = xl * wc/wcVirtuel
@@ -77,45 +81,6 @@ love.graphics.push("all")
     
     end
 
-love.graphics.pop()
-end
-
-function canvas.gridPoint(x, y)
-
-    x = math.floor(x/dx+0.5)
-    y = math.floor(y/dy+0.5)
-    return x, y
-end
-
-function canvas.addPoint(i, j)
-
-    local l = #gridPoints
-    local gridPoint = {}
-    gridPoint.i = i
-    gridPoint.j = j
-    print(i, j)
-    gridPoints[l+1] = gridPoint
-
-end
-
-function canvas.drawPoints()
-love.graphics.push("all")
-
-    love.graphics.setColor(color.WHITE)
-
-    local gridPoint = {}
-    local x,y
-    for i = 1,#gridPoints do
-    
-        gridPoint = gridPoints[i]
-        x = gridPoint.i * dx
-        y = gridPoint.j * dy
-        
-        x,y = canvas.toGlobal(x, y)
-        love.graphics.circle("fill", x, y, 5)
-    
-    end
-    
 love.graphics.pop()
 end
 
