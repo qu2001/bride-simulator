@@ -1,4 +1,9 @@
 
+Object          = require 'object'
+
+local Matrix    = require 'matrix2'
+local solver    = require 'solver'
+
 local matrix    = require("matrix")
 local fea       = require("fea")
 local vector    = require("vector")
@@ -86,6 +91,40 @@ function calc()
 end
 
 function love.load()
+
+    local L = Matrix:new{
+        elements    = {
+          0.04,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+          0.45,  0.67,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+          0.88,  0.34,  0.77,  0.00,  0.00,  0.00,  0.00,  0.00,  0.00,
+          0.33,  0.02,  0.88,  0.11,  0.00,  0.00,  0.00,  0.00,  0.00,
+          0.20,  0.41,  0.51,  0.85,  0.86,  0.00,  0.00,  0.00,  0.00,
+          0.90,  0.28,  0.12,  0.09,  0.56,  0.44,  0.00,  0.00,  0.00,
+          0.69,  0.73,  0.35,  0.85,  0.00,  0.50,  0.19,  0.00,  0.00,
+          0.47,  0.43,  0.36,  0.64,  0.94,  0.48,  0.93,  0.19,  0.00,
+          0.57,  0.20,  0.73,  0.91,  0.14,  0.71,  0.51,  0.90,  0.66,
+        },
+        width       = 9,
+        height      = 9,
+    }
+    
+    local x = Matrix:new{
+        elements    = {32, 5, -7, 5, 1, 32, 21, 3, -34},
+        width       = 1,
+        height      = 9
+    }
+    
+    local A = L * L:T()
+    local b = A*x
+    
+    t0 = os.clock()
+    x = solver(A, b, 'cholesky')
+    print(os.clock() - t0)
+    
+    t0 = os.clock()
+    x = solver(A, b, 'cramer')
+    print(os.clock() - t0)
+
 
     -- local E     = 2.1e5
     -- local A     = 50

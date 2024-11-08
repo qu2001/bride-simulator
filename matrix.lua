@@ -1,6 +1,8 @@
 
 local matrix = {}
 
+print('DEPRECATED: Use matrix2 instead.')
+
 function matrix.new(M, w, h)
 
     if w*h ~= #M then
